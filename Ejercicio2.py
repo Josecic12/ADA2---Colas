@@ -17,37 +17,59 @@ class Cola:
     def tamano(self):
         return len(self.items)
 
+    def mostrar(self):
+        return self.items
+
 class SistemaDeColas:
     def __init__(self):
         self.colas = {
-            1: Cola(),
-            2: Cola(),
-            3: Cola()
+            0: Cola(),  # Cola para servicio prioritario
+            1: Cola(),  # Cambio de llantas
+            2: Cola(),  # Cambio de aceite
+            3: Cola()   # Servicio completo
         }
         self.contadores = {
+            0: 1,
             1: 1,
             2: 1,
             3: 1
+        }
+        self.servicios = {
+            0: "Servicio prioritario",
+            1: "Cambio de llantas",
+            2: "Cambio de aceite",
+            3: "Servicio completo"
         }
 
     def llegada_cliente(self, numero_servicio):
         if numero_servicio in self.colas:
             numero_atencion = self.contadores[numero_servicio]
             self.colas[numero_servicio].enqueue(numero_atencion)
-            print(f"Cliente con número {numero_atencion} agregado a la cola del servicio {numero_servicio}")
+            print(f"Cliente con número {numero_atencion} agregado a la cola de {self.servicios[numero_servicio]}")
+            print(f"Cola actual de {self.servicios[numero_servicio]}: {self.colas[numero_servicio].mostrar()}")
             self.contadores[numero_servicio] += 1
         else:
             print(f"Servicio {numero_servicio} no existe.")
 
     def atender_cliente(self, numero_servicio):
-        if numero_servicio in self.colas:
+        if not self.colas[0].esta_vacia():  # Prioridad para la cola del servicio prioritario
+            numero_atencion = self.colas[0].dequeue()
+            print(f"Atendiendo al cliente PRIORITARIO con número {numero_atencion} de {self.servicios[0]}.")
+            print(f"Cola restante de {self.servicios[0]}: {self.colas[0].mostrar()}")
+        elif numero_servicio in self.colas:
             numero_atencion = self.colas[numero_servicio].dequeue()
             if numero_atencion is not None:
-                print(f"Atendiendo al cliente con número {numero_atencion} del servicio {numero_servicio}")
+                print(f"Atendiendo al cliente con número {numero_atencion} de {self.servicios[numero_servicio]}")
+                print(f"Cola restante de {self.servicios[numero_servicio]}: {self.colas[numero_servicio].mostrar()}")
             else:
-                print(f"No hay clientes para atender en la cola del servicio {numero_servicio}.")
+                print(f"No hay clientes para atender en la cola de {self.servicios[numero_servicio]}.")
         else:
             print(f"Servicio {numero_servicio} no existe.")
+
+    def mostrar_estado_colas(self):
+        print("Estado actual de las colas:")
+        for servicio, cola in self.colas.items():
+            print(f"{self.servicios[servicio]}: {cola.mostrar()}")
 
 def simulador():
     sistema = SistemaDeColas()
@@ -57,6 +79,7 @@ def simulador():
 
         if comando == 'Q':
             print("Saliendo del sistema.")
+            sistema.mostrar_estado_colas()
             break
 
         try:

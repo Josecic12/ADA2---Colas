@@ -22,12 +22,18 @@ class Cola:
 
 def sumar_colas(cola_a, cola_b):
     cola_resultado = Cola()
-
+    
     while not cola_a.esta_vacia() and not cola_b.esta_vacia():
+        print(f"Cola A: {cola_a.mostrar()}")
+        print(f"Cola B: {cola_b.mostrar()}")
         elemento_a = cola_a.dequeue()
         elemento_b = cola_b.dequeue()
         suma = elemento_a + elemento_b
         cola_resultado.enqueue(suma)
+        print(f"Resultado parcial: {cola_resultado.mostrar()}")
+
+    print(f"Cola A vacía: {cola_a.mostrar()}")
+    print(f"Cola B vacía: {cola_b.mostrar()}")
 
     return cola_resultado
 
@@ -48,4 +54,14 @@ cola_b.enqueue(3)
 
 cola_resultado = sumar_colas(cola_a, cola_b)
 
-print(cola_resultado.mostrar())
+cola_c = Cola()
+cola_c.enqueue(9)
+cola_c.enqueue(6)
+cola_c.enqueue(11)
+cola_c.enqueue(19)
+cola_c.enqueue(15)
+
+print(f"Cola C (resultado): {cola_c.mostrar()}")
+
+print(f"Estado final de Cola A: {cola_a.mostrar()}")
+print(f"Estado final de Cola B: {cola_b.mostrar()}")
